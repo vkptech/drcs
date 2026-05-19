@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДРЦС — Департамент Разработки Цифровых Систем</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0F1535;
+    --navy-mid: #1A2347;
+    --navy-light: #232E55;
+    --accent: #00C896;
+    --accent2: #4E8CFF;
+    --accent3: #FF6B6B;
+    --gold: #F5C842;
+    --text: #E8EAF0;
+    --text-muted: #8B93B5;
+    --card: rgba(255,255,255,0.04);
+    --card-border: rgba(255,255,255,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 64px;
+    background: rgba(15,21,53,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--card-border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; }
+  .nav-logo-mark {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: #fff;
+  }
+  .nav-logo-text { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-muted); text-transform: uppercase; }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500; letter-spacing: 0.05em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-badge {
+    background: rgba(0,200,150,0.15); border: 1px solid rgba(0,200,150,0.3);
+    color: var(--accent); padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 80px 48px 48px;
+    text-align: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(78,140,255,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(0,200,150,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 80% 20%, rgba(245,200,66,0.06) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 20px; position: relative;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); opacity: 0.4;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .hero-title .line-accent { color: var(--accent); }
+  .hero-sub {
+    font-size: clamp(14px, 2vw, 18px); color: var(--text-muted);
+    max-width: 560px; line-height: 1.7; margin: 20px auto 48px;
+    position: relative;
+  }
+  .hero-stats {
+    display: flex; gap: 48px; justify-content: center;
+    position: relative; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 52px; line-height: 1;
+    background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-stat-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+  .hero-stat-divider { width: 1px; background: var(--card-border); align-self: stretch; }
+  .scroll-hint {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--text-muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  .scroll-arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--text-muted), transparent); }
+  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+
+  /* SECTIONS */
+  section { padding: 96px 48px; max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 56px);
+    line-height: 1; margin-bottom: 16px;
+  }
+  .section-desc { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 56px; }
+
+  /* TEAMS */
+  .teams-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .team-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 32px; position: relative; overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .team-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.16); }
+  .team-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .team-card.teal::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .team-card.blue::before { background: linear-gradient(90deg, var(--accent2), #A855F7); }
+  .team-card.purple::before { background: linear-gradient(90deg, #A855F7, var(--accent3)); }
+  .team-icon {
+    width: 48px; height: 48px; border-radius: 12px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .team-card.teal .team-icon { background: rgba(0,200,150,0.15); }
+  .team-card.blue .team-icon { background: rgba(78,140,255,0.15); }
+  .team-card.purple .team-icon { background: rgba(168,85,247,0.15); }
+  .team-name { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .team-product { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.05em; margin-bottom: 12px; }
+  .team-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+  .team-lead { display: flex; align-items: center; gap: 10px; padding-top: 20px; border-top: 1px solid var(--card-border); }
+  .team-lead-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .team-card.teal .team-lead-avatar { background: rgba(0,200,150,0.2); color: var(--accent); }
+  .team-card.blue .team-lead-avatar { background: rgba(78,140,255,0.2); color: var(--accent2); }
+  .team-card.purple .team-lead-avatar { background: rgba(168,85,247,0.2); color: #A855F7; }
+  .team-lead-name { font-size: 13px; font-weight: 600; }
+  .team-lead-role { font-size: 11px; color: var(--text-muted); }
+  .team-count-badge {
+    position: absolute; top: 32px; right: 32px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 48px; opacity: 0.06; line-height: 1;
+  }
+
+  /* PROJECTS */
+  .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .project-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 32px;
+    transition: transform 0.3s, border-color 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .project-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.16); }
+  .project-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .project-num { font-family: 'Bebas Neue', sans-serif; font-size: 64px; opacity: 0.08; line-height: 1; position: absolute; top: 16px; right: 24px; }
+  .project-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 6px;
+  }
+  .tag-active { background: rgba(0,200,150,0.15); color: var(--accent); border: 1px solid rgba(0,200,150,0.25); }
+  .tag-planned { background: rgba(78,140,255,0.15); color: var(--accent2); border: 1px solid rgba(78,140,255,0.25); }
+  .project-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.03em; margin-bottom: 10px; }
+  .project-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; }
+  .progress-label span:last-child { font-weight: 700; color: var(--accent); }
+  .progress-bar {
+    height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+  .fill-80 { width: 80%; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .fill-90 { width: 90%; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .fill-10 { width: 10%; background: linear-gradient(90deg, var(--gold), var(--accent3)); }
+  .project-tech { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
+  .tech-badge {
+    font-size: 11px; padding: 3px 8px; border-radius: 4px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+    color: var(--text-muted); font-weight: 500;
+  }
+
+  /* TECH STACK */
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  .tech-item {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 16px 12px; text-align: center;
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .tech-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.07);
+  }
+  .tech-item-icon { font-size: 24px; margin-bottom: 8px; }
+  .tech-item-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+  .tech-item-cat { font-size: 10px; color: var(--text-muted); letter-spacing: 0.05em; }
+
+  /* VISION */
+  .vision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .vision-track {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 32px;
+  }
+  .vision-year {
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .vision-year::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
+  .vision-item { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
+  .vision-dot {
+    width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0;
+  }
+  .vision-item-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .vision-item-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ROADMAP */
+  .roadmap-table { margin-top: 14px;width: 100%; border-collapse: collapse; }
+  .roadmap-table th {
+    padding: 20px 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); padding: 0 16px 16px; text-align: left;
+  }
+  .roadmap-table th.month { text-align: center; }
+  .roadmap-table td { padding: 20px 20px; border-top: 1px solid var(--card-border); font-size: 13px; vertical-align: middle; }
+  .roadmap-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .rm-dot {
+    margin: auto; width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rm-active { background: rgba(0,200,150,0.2); }
+  .rm-active svg { stroke: var(--accent); }
+  .rm-planned { background: rgba(78,140,255,0.15); }
+  .rm-planned svg { stroke: var(--accent2); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--card-border);
+    padding: 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.1em; }
+  .footer-brand span { color: var(--accent); }
+  .footer-note { font-size: 12px; color: var(--text-muted); }
+
+  /* ANIMATE */
+  .fade-up { opacity: 0; transform: translateY(32px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links, .nav-badge { display: none; }
+    section { padding: 64px 20px; }
+    .teams-grid, .projects-grid, .vision-grid { grid-template-columns: 1fr; }
+    .hero { padding: 100px 20px 64px; }
+    .hero-stats { gap: 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+ <div class="nav-logo"><img src="logo.png" style="width: 170px;"/></div>
+  <div class="nav-links">
+    <a href="#team">Команда</a>
+    <a href="#projects">Проекты</a>
+    <a href="#stack">Технологии</a>
+    <a href="#vision">Видение</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <h1 class="hero-title">
+    Департамент Разработки Цифровых Систем
+  </h1>
+  <p class="hero-sub">Строим цифровую инфраструктуру банка — от мобильного приложения до автоматизации внутренних процессов. 23 специалиста. 4 активных проекта.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">23</div>
+      <div class="hero-stat-label">Сотрудника</div>
+    </div>
+    <div class="hero-stat-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">Управления</div>
+    </div>
+    <div class="hero-stat-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4</div>
+      <div class="hero-stat-label">Приоритетных Проекта</div>
+    </div>
+    <div class="hero-stat-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">Q2</div>
+      <div class="hero-stat-label">2026 фокус</div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-arrow"></div>
+    Далее
+  </div>
+</div>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-eyebrow">Структура</div>
+  <h2 class="section-title">Состав команды</h2>
+  <p class="section-desc">Три специализированных управления, каждое со своим продуктом и зоной ответственности.</p>
+  <div class="teams-grid">
+    <div class="team-card teal fade-up">
+      <div class="team-count-badge">9</div>
+      <div class="team-icon">📱</div>
+      <div class="team-name">Управление ДБО ФЛ</div>
+      <div class="team-product">Tenge24</div>
+      <div class="team-desc">Интернет-банкинг для физических лиц. Мобильное приложение, онлайн-сервисы, клиентский опыт.</div>
+      <div class="team-lead">
+        <div class="team-lead-avatar">АТ</div>
+        <div>
+          <div class="team-lead-name">Тиленбаева Айдана</div>
+          <div class="team-lead-role">и.о. Начальника управления · 9 сотрудников</div>
+        </div>
+      </div>
+    </div>
+    <div class="team-card blue fade-up delay-1">
+      <div class="team-count-badge">6</div>
+      <div class="team-icon">⚙️</div>
+      <div class="team-name">Управление Цифровых Сервисов</div>
+      <div class="team-product">BPM</div>
+      <div class="team-desc">Автоматизация внутренних бизнес-процессов банка. Переход с Node.js на Camunda BPM.</div>
+      <div class="team-lead">
+        <div class="team-lead-avatar">НХ</div>
+        <div>
+          <div class="team-lead-name">Хайдаров Нурбек</div>
+          <div class="team-lead-role">Начальник управления · 6 сотрудников</div>
+        </div>
+      </div>
+    </div>
+    <div class="team-card purple fade-up delay-2">
+      <div class="team-count-badge">8</div>
+      <div class="team-icon">🏢</div>
+      <div class="team-name">Управление ДБО ЮЛ</div>
+      <div class="team-product">TengeBusiness</div>
+      <div class="team-desc">Интернет-банкинг для юридических лиц. Корпоративные клиенты, бизнес-сервисы, B2B решения.</div>
+      <div class="team-lead">
+        <div class="team-lead-avatar">БТ</div>
+        <div>
+          <div class="team-lead-name">Тешаев Бахтиёр</div>
+          <div class="team-lead-role">и.о. Начальника управления · 8 сотрудников</div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background: linear-gradient(180deg, transparent, rgba(255,255,255,0.01)); padding-top: 0;">
+  <div class="section-eyebrow">Текущие проекты</div>
+  <h2 class="section-title">В работе прямо сейчас</h2>
+  <p class="section-desc">Порядок внутри — это скорость снаружи.</p>
+  <div class="projects-grid">
+    <div class="project-card fade-up">
+      <div class="project-num">01</div>
+      <div class="project-header">
+        <span class="project-tag tag-active">В работе · 80%</span>
+      </div>
+      <div class="project-title"><a href="https://superset.tengebank.uz/superset/dashboard/13/?native_filters_key=38oW1Nu48g0" target="_blank" style="color: white; text-decoration: none;">Мониторинг банкоматов</a></div>
+      <div class="project-desc">Централизованный контроль состояния всей сети банкоматов в реальном времени. Покрытие Hyosung, Diebold и NCR.</div>
+      <div class="progress-label"><span>Прогресс</span><span>80%</span></div>
+      <div class="progress-bar"><div class="progress-fill fill-80"></div></div>
+      <div class="project-tech">
+        <span class="tech-badge">Go</span>
+        <span class="tech-badge">PostgreSQL</span>
+        <span class="tech-badge">Superset</span>
+        <span class="tech-badge">DWH</span>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-1">
+      <div class="project-num">02</div>
+      <div class="project-header">
+        <span class="project-tag tag-active">В работе · 90%</span>
+      </div>
+      <div class="project-title"><a href="https://bpm-msb.tengebank.uz" target="_blank" style="color: white; text-decoration: none;">Кредитование МСБ (офлайн)</a></div>
+      <div class="project-desc">Ускорение и контроль выдач кредитов бизнесу.</div>
+      <div class="progress-label"><span>Прогресс</span><span>90%</span></div>
+      <div class="progress-bar"><div class="progress-fill fill-90"></div></div>
+      <div class="project-tech">
+        <span class="tech-badge">Camunda</span>
+        <span class="tech-badge">Java</span>
+        <span class="tech-badge">PostgreSQL</span>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2">
+      <div class="project-num">03</div>
+      <div class="project-header">
+        <span class="project-tag tag-planned">В процессе · 10%</span>
+      </div>
+      <div class="project-title">Переход на Camunda BPM</div>
+      <div class="project-desc">Миграция с монолитного Node.js на полноценный BPM-движок. Снижение Time-to-Market бизнес-процессов.</div>
+      <div class="progress-label"><span>Прогресс MVP 2</span><span>10%</span></div>
+      <div class="progress-bar"><div class="progress-fill fill-10"></div></div>
+      <div class="project-tech">
+        <span class="tech-badge">Camunda 7.24</span>
+        <span class="tech-badge">Node.js</span>
+        <span class="tech-badge">ReactJS</span>
+        <span class="tech-badge">Kafka</span>
+        <span class="tech-badge">Keycloak</span>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-3">
+      <div class="project-num">04</div>
+      <div class="project-header">
+        <span class="project-tag tag-active">В работе · 90%</span>
+      </div>
+      <div class="project-title"><a href="https://portal.tengebank.uz/" target="_blank" style="color: white; text-decoration: none;">Внутренний портал банка</a></div>
+      <div class="project-desc">HR-портал нового поколения: новости, вакансии, ВНД, трудовая дисциплина, назначения, продукты банка.</div>
+      <div class="progress-label"><span>Прогресс MVP 2</span><span>90%</span></div>
+      <div class="progress-bar"><div class="progress-fill fill-90"></div></div>
+      <div class="project-tech">
+        <span class="tech-badge">1C</span>
+        <span class="tech-badge">ReactJS</span>
+        <span class="tech-badge">Redis</span>
+        <span class="tech-badge">PostgreSQL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="stack">
+  <div class="section-eyebrow">Технологии</div>
+  <h2 class="section-title">Стек разработки</h2>
+  <p class="section-desc">Современный enterprise-стек, покрывающий весь цикл разработки и эксплуатации.</p>
+  <div class="tech-grid">
+    <div class="tech-item fade-up"><div class="tech-item-icon">☕</div><div class="tech-item-name">Java</div><div class="tech-item-cat">Backend</div></div>
+    <div class="tech-item fade-up delay-1"><div class="tech-item-icon">🌀</div><div class="tech-item-name">Kotlin</div><div class="tech-item-cat">Mobile</div></div>
+    <div class="tech-item fade-up delay-2"><div class="tech-item-icon">🦋</div><div class="tech-item-name">Flutter</div><div class="tech-item-cat">Mobile</div></div>
+    <div class="tech-item fade-up delay-1"><div class="tech-item-icon">🅰️</div><div class="tech-item-name">Angular</div><div class="tech-item-cat">Frontend</div></div>
+    <div class="tech-item fade-up delay-2"><div class="tech-item-icon">🟢</div><div class="tech-item-name">Node.js</div><div class="tech-item-cat">Backend</div></div>
+    <div class="tech-item fade-up delay-3"><div class="tech-item-icon">⚡</div><div class="tech-item-name">Spring Webflux</div><div class="tech-item-cat">Reactive</div></div>
+    <div class="tech-item fade-up"><div class="tech-item-icon">🐘</div><div class="tech-item-name">PostgreSQL</div><div class="tech-item-cat">Database</div></div>
+    <div class="tech-item fade-up delay-1"><div class="tech-item-icon">🍃</div><div class="tech-item-name">MongoDB</div><div class="tech-item-cat">NoSQL</div></div>
+    <div class="tech-item fade-up delay-2"><div class="tech-item-icon">🔴</div><div class="tech-item-name">Redis</div><div class="tech-item-cat">Cache</div></div>
+    <div class="tech-item fade-up delay-3"><div class="tech-item-icon">📨</div><div class="tech-item-name">Kafka</div><div class="tech-item-cat">Messaging</div></div>
+    <div class="tech-item fade-up"><div class="tech-item-icon">🐰</div><div class="tech-item-name">RabbitMQ</div><div class="tech-item-cat">Messaging</div></div>
+    <div class="tech-item fade-up delay-1"><div class="tech-item-icon">☸️</div><div class="tech-item-name">Kubernetes</div><div class="tech-item-cat">Infra</div></div>
+    <div class="tech-item fade-up delay-2"><div class="tech-item-icon">🔐</div><div class="tech-item-name">Keycloak</div><div class="tech-item-cat">Auth</div></div>
+    <div class="tech-item fade-up delay-3"><div class="tech-item-icon">🔍</div><div class="tech-item-name">Elasticsearch</div><div class="tech-item-cat">Search</div></div>
+    <div class="tech-item fade-up"><div class="tech-item-icon">📊</div><div class="tech-item-name">Grafana, Prometheus</div><div class="tech-item-cat">Monitoring</div></div>
+    <div class="tech-item fade-up delay-1"><div class="tech-item-icon">⚙️</div><div class="tech-item-name">Camunda BPM</div><div class="tech-item-cat">Process</div></div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section id="vision">
+  <div class="section-eyebrow">Стратегия</div>
+  <h2 class="section-title">Видение на 2026–2028</h2>
+  <div class="vision-grid">
+    <div class="vision-track fade-up">
+      <div class="vision-year">2026 — Фундамент</div>
+      <div class="vision-item">
+        <div class="vision-dot" style="background: var(--accent)"></div>
+        <div>
+          <div class="vision-item-title">Microservices & Event-Driven (декомпозиция микросервисов)</div>
+          <div class="vision-item-desc">Переход с монолитов на event-driven архитектуру. Kafka как шина событий, domain-driven дизайн сервисов, API Gateway для всех продуктов.</div>
+        </div>
+      </div>
+      <div class="vision-item">
+        <div class="vision-dot" style="background: var(--accent2)"></div>
+        <div>
+          <div class="vision-item-title">DevOps зрелость</div>
+          <div class="vision-item-desc">Полный CI/CD pipeline, GitOps в Kubernetes, Prometheus + Grafana alerting, SLO/SLA для всех критических сервисов. GitLab как единая платформа.</div>
+        </div>
+      </div>
+
+       <div class="vision-item">
+        <div class="vision-dot" style="background: #A855F7"></div>
+        <div>
+          <div class="vision-item-title">Внутренние бизнес-процессы</div>
+          <div class="vision-item-desc">Отпуск, командировка, увольнение, АХД — всё через портал. Заявка уходит автоматически по маршруту согласования, статус виден в реальном времени, HR разгружен.</div>
+        </div>
+      </div>
+      <div class="vision-item">
+        <div class="vision-dot" style="background: var(--gold)"></div>
+        <div>
+          <div class="vision-item-title">Рост команды</div>
+          <div class="vision-item-desc">Набор Go-разработчиков, DevOps-инженеров и аналитиков данных. Целевой размер: 10–15 человек. Программа обучения: Golang, Camunda, Kafka, OAuth2.</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="vision-track fade-up delay-1">
+      <div class="vision-year">2027–2028 — Рост</div>
+     
+      <div class="vision-item">
+        <div class="vision-dot" style="background: var(--accent3)"></div>
+        <div>
+          <div class="vision-item-title">Единый UI-Kit</div>
+          <div class="vision-item-desc">Все продукты банка выглядят и работают одинаково. Меньше дублирования, быстрее разработка новых фич.</div>
+        </div>
+      </div>
+
+
+      <div class="vision-item">
+        <div class="vision-dot" style="background: var(--accent)"></div>
+        <div>
+          <div class="vision-item-title"> Big Data & Customer Intelligence</div>
+          <div class="vision-item-desc">Мы знаем каждую транзакцию клиента — но пока не используем это. Построив data pipeline, банк начнёт понимать: кому предложить кредит, кто готов к депозиту, кто вот-вот уйдёт к конкуренту.</div>
+        </div>
+      </div>
+     
+       <div class="vision-item">
+        <div class="vision-dot" style="background: var(--accent)"></div>
+        <div>
+          <div class="vision-item-title">Embedded Finance / Banking as a Service</div>
+          <div class="vision-item-desc">Партнёры встраивают финансовые сервисы Tenge Bank в свои приложения — кредиты, платежи, переводы — через готовый WebView. Банк расширяет охват без новых отделений и без маркетинга.</div>
+        </div>
+      </div>
+      <div class="vision-item">
+        <div class="vision-dot" style="background: #A855F7"></div>
+        <div>
+          <div class="vision-item-title">E-commerce для мерчантов</div>
+          <div class="vision-item-desc">Платёжные страницы, инвойсинг, аналитика продаж — всё в одном кабинете. Меньше интеграций, больше продаж.</div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section style="padding-top: 0;">
+  <div class="section-eyebrow">Roadmap Q2 2026</div>
+  <h2 class="section-title">План по кварталу</h2>
+  <p class="section-desc">Текущий квартал — запуск мониторингов и Camunda MVP 2.</p>
+  <div style="background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden;">
+    <table class="roadmap-table">
+      <thead>
+        <tr style="padding: 16px 20px;">
+          <th style="width: 220px;">Задача</th>
+          <th>Описание</th>
+          <th class="month" style="width: 80px;">МАЙ</th>
+          <th class="month" style="width: 80px;">ИЮНЬ</th>
+          <th class="month" style="width: 80px;">ИЮЛЬ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight: 600; font-size: 12px;">Мониторинг банкоматов Diebold</td>
+          <td style="color: var(--text-muted); font-size: 12px;">Полное покрытие банкоматов Diebold</td>
+          <td><div class="rm-dot rm-active" style="margin: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="2"><path d="M2 7l3.5 3.5L12 3"/></svg></div></td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; font-size: 12px;">Camunda BPM MVP 2</td>
+          <td style="color: var(--text-muted); font-size: 12px;">Виртуальные карты, счета, SMS</td>
+          <td><div class="rm-dot rm-active" style="margin: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="2"><path d="M2 7l3.5 3.5L12 3"/></svg></div></td>
+          <td><div class="rm-dot rm-active" style="margin: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="2"><path d="M2 7l3.5 3.5L12 3"/></svg></div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; font-size: 12px;">Внутренний портал MVP 2</td>
+          <td style="color: var(--text-muted); font-size: 12px;">Трудовая дисциплина</td>
+          <td><div class="rm-dot rm-active" style="margin: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="2"><path d="M2 7l3.5 3.5L12 3"/></svg></div></td>
+          <td><div class="rm-dot rm-active" style="margin: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="2"><path d="M2 7l3.5 3.5L12 3"/></svg></div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; font-size: 12px;">Обучение команд</td>
+          <td style="color: var(--text-muted); font-size: 12px;">Golang, Kafka, OAuth2, Vulnerabilities</td>
+          <td></td>
+          <td><div class="rm-dot rm-planned" style="margin: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="2"><circle cx="7" cy="7" r="4"/></svg></div></td>
+          <td><div class="rm-dot rm-planned" style="margin: auto;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="2"><circle cx="7" cy="7" r="4"/></svg></div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="display: flex; gap: 24px; padding: 16px 16px; border-top: 1px solid var(--card-border);">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="rm-dot rm-active" style="width: 24px; height: 24px;"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M2 7l3.5 3.5L12 3"/></svg></div>
+        <span style="font-size: 12px; color: var(--text-muted);">В работе</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="rm-dot rm-planned" style="width: 24px; height: 24px;"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="var(--accent2)" stroke-width="2"><circle cx="7" cy="7" r="4"/></svg></div>
+        <span style="font-size: 12px; color: var(--text-muted);">Запланировано</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+
+    <div class="footer-note" style="margin-top: 4px;">Департамент Разработки Цифровых Систем · 2026</div>
+  </div>
+
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
